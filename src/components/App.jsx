@@ -151,7 +151,7 @@ function App() {
 
   return (
     <>
-      <Header />
+      <Header resetForm={resetForm} />
       <Routes>
         <Route path="/" element={<HeroSection cards={cards} />} />
         <Route

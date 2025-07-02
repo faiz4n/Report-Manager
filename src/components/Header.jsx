@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function Header() {
+function Header({ resetForm }) {
   return (
     <header>
       <div className="header-left">
@@ -8,10 +8,12 @@ function Header() {
         <h3>Report Manager</h3>
       </div>
 
-      <Link className="dashboard" to="/">
-        <i className="fa-solid fa-house"></i>
-        Dashboard
-      </Link>
+      <div>
+        <Link role="button" to="/" onClick={resetForm} className="dashboard">
+          <i className="fa-solid fa-house"></i>
+          Dashboard
+        </Link>
+      </div>
     </header>
   );
 }
