@@ -30,6 +30,12 @@ function InputList({
         setState={setName}
         value={name}
         error={errors.name}
+        onChange={(e) => {
+          const value = e.target.value;
+          if (/^[A-Za-z\s]*$/.test(value)) {
+            setName(value);
+          }
+        }}
       />
       <Input
         icon={"fa-regular fa-envelope"}
@@ -43,7 +49,13 @@ function InputList({
         icon={"fa-solid fa-phone"}
         label={"Phone Number"}
         setState={setPhone}
-        type="number"
+        type={"tel"}
+        onChange={(e) => {
+          const value = e.target.value;
+          if (/^\d{0,10}$/.test(value)) {
+            setPhone(value);
+          }
+        }}
         value={phone}
         error={errors.phone}
       />
@@ -87,6 +99,7 @@ function InputList({
         type="file"
         error={errors.resumeUrl}
         onChange={(e) => handleUpload(e, "Resume")}
+        accept={".pdf"}
       />
       {resumeUpdated && (
         <div className="resume-uploaded">

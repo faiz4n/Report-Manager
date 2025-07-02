@@ -11,6 +11,7 @@ function Input({
   handleRemove,
   error,
   onChange,
+  accept,
 }) {
   const handleChange = onChange || ((e) => setState(e.target.value));
   return (
@@ -25,6 +26,7 @@ function Input({
           placeholder={`Enter ${label.toLowerCase()}`}
           value={value}
           onChange={handleChange}
+          accept={accept}
         />
         {canDelete && length > 1 && (
           <button className="del-qual-btn" onClick={handleRemove}>
