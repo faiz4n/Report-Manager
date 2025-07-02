@@ -9,8 +9,8 @@ A simple React app to perform Create, Read, Update, and Delete operations on use
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/faiz4n/react-json-crud-app.git
-cd react-json-crud-app
+git clone https://github.com/faiz4n/Report-Manager
+cd Report-Manager
 ```
 
 ### 2. Install dependencies
