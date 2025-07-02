@@ -36,7 +36,7 @@ This starts a fake REST API at: http://localhost:3001/reports
 ### 5. Run the React App
 
 ```bash
-npm start
+npm run dev
 ```
 
 React runs at: http://localhost:3000
