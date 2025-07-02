@@ -1,0 +1,11 @@
+@media (max-width: 1200px) {
+  .report-card {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 650px) {
+  .form-container {
+    padding: 30px;
+  }
+}
