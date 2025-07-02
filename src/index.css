@@ -400,3 +400,23 @@ label {
   font-size: 3rem;
   color: #6c6c6c;
 }
+
+.image-input {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.image-input-img {
+  max-width: 8rem;
+}
+.image-input-img img {
+  width: 100%;
+  border-radius: 20px;
+}
+
+.resume-uploaded {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgb(0, 193, 45);
+}

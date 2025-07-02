@@ -23,6 +23,7 @@ function App() {
   const [editingId, setEditingId] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [resumeUrl, setResumeUrl] = useState("");
+  const [resumeUpdated, setResumeUpdated] = useState(false);
 
   useEffect(function () {
     fetch("http://localhost:3001/reports")
@@ -32,8 +33,8 @@ function App() {
 
   const details = {
     id: Date.now().toString(),
-    name: name,
-    email: email,
+    name: name.trim(),
+    email: email.trim(),
     phone: phone,
     qualification: qualification,
     imageUrl: imageUrl,
@@ -49,9 +50,22 @@ function App() {
     setImageUrl(card.imageUrl);
     setResumeUrl(card.resumeUrl);
     navigate("/create");
+    setResumeUpdated(false);
+  }
+
+  function resetForm() {
+    setName("");
+    setEmail("");
+    setPhone("");
+    setQualification([""]);
+    setEditingId(null);
+    setImageUrl("");
+    setResumeUrl("");
+    setResumeUpdated(false);
   }
 
   function handleUpload(e, type) {
+    if (type === "Resume") setResumeUpdated(false);
     const image = e.target.files[0];
     const formData = new FormData();
 
@@ -75,10 +89,12 @@ function App() {
             data.secure_url.replace("/upload", "/upload/fl_attachment")
           );
         console.log(details);
+        if (type === "Resume") setResumeUpdated(true);
       });
   }
 
   function onCreateCard() {
+    setResumeUpdated(false);
     const newErrors = {};
 
     if (!name) newErrors.name = "Name required";
@@ -99,11 +115,18 @@ function App() {
     }
     setErrors({});
 
+    const filteredQualifications = qualification.filter((q) => q && q.trim());
+
+    const detailsToSave = {
+      ...details,
+      qualification: filteredQualifications,
+    };
+
     if (editingId) {
       fetch(`http://localhost:3001/reports/${editingId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...details, id: editingId }),
+        body: JSON.stringify({ ...detailsToSave, id: editingId }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -114,7 +137,7 @@ function App() {
       fetch("http://localhost:3001/reports", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(details),
+        body: JSON.stringify(detailsToSave),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -123,13 +146,7 @@ function App() {
         });
     }
 
-    setName("");
-    setEmail("");
-    setPhone("");
-    setQualification([""]);
-    setEditingId(null);
-    setImageUrl("");
-    setResumeUrl("");
+    resetForm();
   }
 
   return (
@@ -156,6 +173,8 @@ function App() {
                 setQualification={setQualification}
                 errors={errors}
                 handleUpload={handleUpload}
+                imageUrl={imageUrl}
+                resumeUpdated={resumeUpdated}
               />
             </ReportForm>
           }

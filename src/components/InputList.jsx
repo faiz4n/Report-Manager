@@ -11,6 +11,8 @@ function InputList({
   setPhone,
   errors,
   handleUpload,
+  imageUrl,
+  resumeUpdated,
 }) {
   function handleAdd(e) {
     e.preventDefault();
@@ -65,14 +67,20 @@ function InputList({
           handleRemove={(e) => handleRemove(e, idx)}
         />
       ))}
-
-      <Input
-        icon={"fa-solid fa-upload"}
-        label={"Image"}
-        type="file"
-        onChange={(e) => handleUpload(e, "Image")}
-        error={errors.imageUrl}
-      />
+      <div className="image-input">
+        <div className="image-input-input">
+          <Input
+            icon={"fa-solid fa-upload"}
+            label={"Image"}
+            type="file"
+            onChange={(e) => handleUpload(e, "Image")}
+            error={errors.imageUrl}
+          />
+        </div>
+        <div className="image-input-img">
+          <img src={imageUrl} alt="" />
+        </div>
+      </div>
       <Input
         icon={"fa-solid fa-file-lines"}
         label={"Resume"}
@@ -80,6 +88,12 @@ function InputList({
         error={errors.resumeUrl}
         onChange={(e) => handleUpload(e, "Resume")}
       />
+      {resumeUpdated && (
+        <div className="resume-uploaded">
+          <p>Resume uploaded</p>
+          <i className="fa-solid fa-check"></i>
+        </div>
+      )}
     </>
   );
 }
