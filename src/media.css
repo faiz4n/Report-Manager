@@ -19,4 +19,10 @@
   .form-container {
     padding: 30px 15px;
   }
+  .create-report-form {
+    padding: 2rem 1.5rem;
+  }
+  .form-inputs {
+    margin: 1rem 0;
+  }
 }
