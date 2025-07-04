@@ -9,3 +9,14 @@
     padding: 30px;
   }
 }
+@media (max-width: 430px) {
+  header {
+    padding: 20px 30px;
+  }
+  header h3 {
+    font-size: 1.1rem;
+  }
+  .form-container {
+    padding: 30px 15px;
+  }
+}
