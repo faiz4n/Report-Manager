@@ -4,6 +4,10 @@ import {
   Route,
   useNavigate,
 } from "react-router-dom";
+import { collection } from "firebase/firestore";
+import { db } from "../../firebase-config";
+import { getDocs, addDoc, doc, updateDoc } from "firebase/firestore";
+
 import { useEffect, useState } from "react";
 import Header from "./Header";
 import HeroSection from "./HeroSection";
@@ -13,6 +17,7 @@ import InputList from "./InputList";
 
 function App() {
   const navigate = useNavigate();
+  const reportsRef = collection(db, "reports");
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -26,17 +31,23 @@ function App() {
   const [resumeUpdated, setResumeUpdated] = useState(false);
 
   useEffect(function () {
-    fetch("http://localhost:3001/reports")
-      .then((res) => res.json())
-      .then((data) => setCards(data));
+    async function fetchReports() {
+      const data = await getDocs(reportsRef);
+      console.log(data);
+      const reportData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setCards(reportData);
+    }
+    fetchReports();
   }, []);
 
   const details = {
-    id: Date.now().toString(),
     name: name.trim(),
     email: email.trim(),
     phone: phone,
-    qualification: qualification,
+    qualification: qualification.map((q) => q.trim()),
     imageUrl: imageUrl,
     resumeUrl: resumeUrl,
   };
@@ -49,8 +60,8 @@ function App() {
     setEditingId(card.id);
     setImageUrl(card.imageUrl);
     setResumeUrl(card.resumeUrl);
-    navigate("/create");
     setResumeUpdated(false);
+    navigate("/create");
   }
 
   function resetForm() {
@@ -66,10 +77,11 @@ function App() {
 
   function handleUpload(e, type) {
     if (type === "Resume") setResumeUpdated(false);
-    const image = e.target.files[0];
+
+    const file = e.target.files[0];
     const formData = new FormData();
 
-    formData.append("file", image);
+    formData.append("file", file);
     formData.append("upload_preset", "Report");
 
     const uploadUrl =
@@ -83,11 +95,13 @@ function App() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (type === "Image") setImageUrl(data.secure_url);
-        if (type === "Resume")
+        if (type === "Image") {
+          setImageUrl(data.secure_url);
+        } else if (type === "Resume") {
           setResumeUrl(
             data.secure_url.replace("/upload", "/upload/fl_attachment")
           );
+        }
         console.log(details);
         if (type === "Resume") setResumeUpdated(true);
       });
@@ -103,7 +117,7 @@ function App() {
       newErrors.email = "Enter a valid email address";
     }
     if (!phone) newErrors.phone = "Phone Number required";
-    if (!qualification.some((q) => q && q.trim())) {
+    if (!qualification.some((q) => q)) {
       newErrors.qualification = "At least one qualification required";
     }
     if (!imageUrl) newErrors.imageUrl = "Image upload is required";
@@ -115,7 +129,7 @@ function App() {
     }
     setErrors({});
 
-    const filteredQualifications = qualification.filter((q) => q && q.trim());
+    const filteredQualifications = qualification.filter((q) => q);
 
     const detailsToSave = {
       ...details,
@@ -123,27 +137,21 @@ function App() {
     };
 
     if (editingId) {
-      fetch(`http://localhost:3001/reports/${editingId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...detailsToSave, id: editingId }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setCards(cards.map((card) => (card.id === editingId ? data : card)));
-          navigate("/reports");
-        });
+      const docRef = doc(db, "reports", editingId);
+      updateDoc(docRef, detailsToSave).then(() => {
+        setCards(
+          cards.map((card) =>
+            card.id === editingId ? { ...detailsToSave, id: editingId } : card
+          )
+        );
+        navigate("/reports");
+      });
     } else {
-      fetch("http://localhost:3001/reports", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(detailsToSave),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setCards([...cards, data]);
-          navigate("/reports");
-        });
+      addDoc(reportsRef, detailsToSave).then((docRef) => {
+        const newCard = { ...detailsToSave, id: docRef.id };
+        setCards([...cards, newCard]);
+        navigate("/reports");
+      });
     }
 
     resetForm();

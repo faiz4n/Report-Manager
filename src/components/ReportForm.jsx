@@ -20,7 +20,7 @@ function ReportForm({ children, details, onCreateCard, editingId }) {
             onCreateCard();
           }}
         >
-          <i className="fa-solid fa-floppy-disk"></i>{" "}
+          <i className="fa-solid fa-floppy-disk"></i>
           {editingId ? "Update Report" : "Create Report"}
         </button>
       </form>

@@ -1,20 +1,18 @@
 import { useNavigate } from "react-router-dom";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "../../firebase-config";
+
 import ReportCard from "./ReportCard";
 
 function ViewReport({ cards, setCards, handleEdit }) {
   const navigate = useNavigate();
-  function handleDelete(cardId) {
+
+  async function handleDelete(cardId) {
     console.log("Deleting ID:", cardId);
-    fetch(`http://localhost:3001/reports/${cardId}`, {
-      method: "DELETE",
-    }).then((res) => {
-      if (res.ok) {
-        setCards(cards.filter((c) => c.id !== cardId));
-      } else {
-        alert("Delete Failed");
-      }
-    });
+    await deleteDoc(doc(db, "reports", cardId));
+    setCards(cards.filter((c) => c.id !== cardId));
   }
+
   return (
     <div className="view-report-section">
       <div className="view-report-heading">

@@ -7,7 +7,7 @@ function ReportCard({ details = {}, onDelete, onEdit }) {
           <img
             src={
               details.imageUrl ||
-              "https://via.placeholder.com/100x100?text=No+Image"
+              "https://cdn-icons-png.flaticon.com/512/12225/12225881.png"
             }
             alt="Profile Photo"
           />
