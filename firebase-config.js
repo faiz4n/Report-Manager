@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAWbDJQ-v1d_V9Za9qi4jTUpibqp4FRnwk",
-  authDomain: "report-manager-986ad.firebaseapp.com",
-  projectId: "report-manager-986ad",
-  storageBucket: "report-manager-986ad.firebasestorage.app",
-  messagingSenderId: "683441248190",
-  appId: "1:683441248190:web:bc15056485c8f71d060bef",
-  measurementId: "G-WSY2CPJ0PW",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
